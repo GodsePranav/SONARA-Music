@@ -8,6 +8,8 @@ Phase 1 establishes the monorepo, local services, the Figtree design system, acc
 
 ## Static UI design preview
 
+Open the [standalone HTML/CSS screen preview](docs/ui-preview.html) to see the complete responsive SONARA interface. It is a static design file and does not need the app or a server to run. The compact view below is included directly in this README.
+
 <table>
   <tr>
     <td colspan="2" align="center"><strong>◉ SONARA</strong> &nbsp; <code>⌕ What do you want to play?</code> <br /><br />⌂ Home &nbsp; · &nbsp; ⌕ Search &nbsp; · &nbsp; Profile</td>

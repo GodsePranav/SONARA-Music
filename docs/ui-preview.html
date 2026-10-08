@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <title>SONARA — Static UI Preview</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: Figtree, Inter, ui-sans-serif, system-ui, sans-serif;
+        background: #000;
+        color: #fff;
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; min-width: 320px; background: #000; }
+      button { font: inherit; color: inherit; }
+      .app { min-height: 100vh; padding: 8px; display: grid; grid-template-rows: 60px 1fr 88px; gap: 8px; }
+      .topbar, .sidebar, .main, .player { background: #121212; border-radius: 8px; }
+      .topbar { display: flex; align-items: center; gap: 28px; padding: 0 22px; }
+      .brand { display: flex; align-items: center; gap: 10px; font-size: 19px; font-weight: 900; letter-spacing: 2px; }
+      .brand-mark { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; color: #07140b; background: #1ed760; font-size: 18px; }
+      .search { width: min(440px, 48vw); border: 1px solid #303030; border-radius: 500px; padding: 12px 17px; color: #b3b3b3; background: #242424; }
+      .top-spacer { flex: 1; }
+      .top-action { border: 0; border-radius: 500px; padding: 10px 16px; background: #fff; color: #111; font-size: 13px; font-weight: 800; }
+      .avatar { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: #303030; font-weight: 800; }
+      .layout { min-height: 0; display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 8px; }
+      .sidebar { padding: 18px 12px; display: flex; flex-direction: column; gap: 26px; }
+      .nav { display: grid; gap: 8px; }
+      .nav-item { border: 0; padding: 10px 12px; text-align: left; color: #b3b3b3; background: transparent; border-radius: 5px; }
+      .nav-item.active { color: #fff; font-weight: 700; }
+      .library-title { padding: 0 12px; color: #b3b3b3; font-size: 12px; font-weight: 800; letter-spacing: 1px; }
+      .library-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; color: #e5e5e5; font-size: 13px; }
+      .mini-art { width: 42px; height: 42px; flex: 0 0 auto; border-radius: 5px; background: linear-gradient(135deg,#c97c5b,#6e354b); }
+      .mini-art.green { background: linear-gradient(135deg,#97b68c,#285344); }
+      .mini-art.purple { background: linear-gradient(135deg,#c99be2,#544a91); }
+      .muted { display: block; margin-top: 4px; color: #aaa; font-size: 11px; }
+      .main { overflow: auto; padding: 20px clamp(18px, 3vw, 42px) 34px; background: linear-gradient(180deg,#234a37 0,#17291f 215px,#121212 390px); }
+      .toolbar { display: flex; gap: 8px; margin-bottom: 36px; }
+      .chip { border: 0; border-radius: 500px; padding: 8px 15px; background: #ffffff1f; font-size: 12px; font-weight: 700; }
+      .chip.selected { color: #111; background: #fff; }
+      .eyebrow { margin: 0 0 8px; color: #d4e5d9; font-size: 11px; font-weight: 800; letter-spacing: 1.4px; }
+      h1 { margin: 0 0 23px; font-size: clamp(38px, 5vw, 64px); letter-spacing: -2px; }
+      .quick-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 9px; margin-bottom: 40px; }
+      .quick { min-width: 0; display: flex; align-items: center; gap: 13px; border-radius: 5px; background: #ffffff1b; overflow: hidden; font-weight: 750; font-size: 13px; }
+      .quick .mini-art { width: 56px; height: 56px; border-radius: 0; }
+      .play { margin: 0 12px 0 auto; color: #1ed760; font-size: 17px; }
+      .section-heading { display: flex; align-items: end; justify-content: space-between; margin: 0 0 15px; }
+      h2 { margin: 0; font-size: 24px; letter-spacing: -.5px; }
+      .show-all { color: #b3b3b3; font-size: 11px; font-weight: 800; letter-spacing: .8px; }
+      .cards { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 12px; margin-bottom: 35px; }
+      .card { min-width: 0; padding: 12px; border-radius: 6px; background: #181818; }
+      .cover { aspect-ratio: 1; display: grid; place-items: center; margin-bottom: 13px; border-radius: 4px; color: #ffffffb8; font-size: 34px; background: linear-gradient(135deg,#e5a263,#8f3c4d); }
+      .cover.c2 { background: linear-gradient(140deg,#83c4b6,#315c6e); }
+      .cover.c3 { background: linear-gradient(140deg,#d2a9e6,#6551a0); }
+      .cover.c4 { background: linear-gradient(140deg,#e4ce76,#b75539); }
+      .cover.c5 { background: linear-gradient(140deg,#97b68c,#285344); }
+      .card strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; }
+      .card p { margin: 6px 0 1px; color: #aaa; font-size: 11px; line-height: 1.45; }
+      .player { display: grid; grid-template-columns: 1fr 1.15fr 1fr; align-items: center; gap: 24px; padding: 12px 18px; background: #181818; }
+      .track { display: flex; align-items: center; gap: 12px; min-width: 0; }
+      .track-copy { overflow: hidden; }
+      .track-copy strong, .track-copy span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .track-copy strong { font-size: 13px; }
+      .track-copy span { margin-top: 5px; color: #aaa; font-size: 11px; }
+      .player-center { text-align: center; }
+      .controls { display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 9px; color: #ddd; }
+      .play-button { width: 34px; height: 34px; display: grid; place-items: center; border: 0; border-radius: 50%; background: #fff; color: #111; }
+      .progress { height: 4px; border-radius: 8px; background: #686868; }
+      .progress span { display: block; width: 36%; height: 100%; border-radius: inherit; background: #1ed760; }
+      .extras { text-align: right; color: #b3b3b3; font-size: 12px; }
+      @media (max-width: 850px) { .layout { grid-template-columns: 195px minmax(0,1fr); } .cards { grid-template-columns: repeat(3,minmax(0,1fr)); } .quick-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .extras { display:none; } .player { grid-template-columns: 1fr 1fr; } }
+      @media (max-width: 600px) { .app { padding: 5px; grid-template-rows: 54px 1fr 72px; gap: 5px; } .topbar { gap: 10px; padding: 0 12px; } .brand { font-size: 15px; } .search { flex: 1; width: auto; font-size: 11px; } .top-action { display:none; } .layout { grid-template-columns: 1fr; } .sidebar { display:none; } .main { padding: 15px; } .toolbar { margin-bottom: 28px; } .quick-grid { grid-template-columns: 1fr 1fr; } .quick { font-size: 11px; } .cards { grid-template-columns: repeat(2,minmax(0,1fr)); } .card:nth-child(n+5) { display:none; } .player { grid-template-columns: 1fr auto; gap: 10px; padding: 8px; } .track .mini-art { width: 44px; height: 44px; } .player-center { text-align: right; } .controls { margin: 0; } .controls > span:not(.play-button) { display:none; } .player-center .progress { display:none; } }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <div class="brand"><span class="brand-mark">♫</span> SONARA</div>
+        <div class="search">⌕ &nbsp; What do you want to play?</div>
+        <div class="top-spacer"></div>
+        <button class="top-action">Explore Premium</button>
+        <div class="avatar">S</div>
+      </header>
+      <div class="layout">
+        <aside class="sidebar">
+          <nav class="nav"><button class="nav-item active">⌂ &nbsp; Home</button><button class="nav-item">⌕ &nbsp; Search</button></nav>
+          <div><div class="library-title">▤ &nbsp; YOUR LIBRARY</div><div class="library-item"><span>＋</span> Add to library</div>
+            <div class="library-item"><span class="mini-art purple"></span><span><strong>Liked Songs</strong><span class="muted">Playlist · You</span></span></div>
+            <div class="library-item"><span class="mini-art"></span><span><strong>Daily Mix 01</strong><span class="muted">Made for you</span></span></div>
+            <div class="library-item"><span class="mini-art green"></span><span><strong>Evening Focus</strong><span class="muted">Playlist · You</span></span></div>
+          </div>
+        </aside>
+        <main class="main">
+          <div class="toolbar"><button class="chip selected">All</button><button class="chip">Music</button><button class="chip">Podcasts</button></div>
+          <p class="eyebrow">A NEW DAY, A NEW SOUND</p><h1>Good evening.</h1>
+          <div class="quick-grid">
+            <div class="quick"><span class="mini-art purple"></span> Liked Songs <span class="play">▶</span></div>
+            <div class="quick"><span class="mini-art"></span> Daily Mix 01 <span class="play">▶</span></div>
+            <div class="quick"><span class="mini-art green"></span> Evening Focus <span class="play">▶</span></div>
+            <div class="quick"><span class="mini-art c2"></span> Fresh Finds <span class="play">▶</span></div>
+            <div class="quick"><span class="mini-art c3"></span> Soft Focus <span class="play">▶</span></div>
+            <div class="quick"><span class="mini-art c4"></span> On repeat <span class="play">▶</span></div>
+          </div>
+          <div class="section-heading"><h2>Made for your day</h2><span class="show-all">SHOW ALL</span></div>
+          <section class="cards">
+            <article class="card"><div class="cover">◒</div><strong>Daily Mix 01</strong><p>A little of everything you love.</p></article>
+            <article class="card"><div class="cover c2">〰</div><strong>Soft Focus</strong><p>Calm sounds for today.</p></article>
+            <article class="card"><div class="cover c3">◉</div><strong>Fresh Finds</strong><p>New music picked for you.</p></article>
+            <article class="card"><div class="cover c4">✳</div><strong>Indie Current</strong><p>The latest alternative.</p></article>
+            <article class="card"><div class="cover c5">◌</div><strong>Late Night</strong><p>A playlist for the ride.</p></article>
+          </section>
+          <div class="section-heading"><h2>Recently played</h2><span class="show-all">SHOW ALL</span></div>
+          <section class="cards">
+            <article class="card"><div class="cover c5">♫</div><strong>Quiet Motion</strong><p>Aster Vale</p></article>
+            <article class="card"><div class="cover c4">✦</div><strong>Golden Hour</strong><p>Various artists</p></article>
+            <article class="card"><div class="cover c2">◒</div><strong>Blue Skies</strong><p>North Coast</p></article>
+            <article class="card"><div class="cover c3">◉</div><strong>Afterglow</strong><p>Soft Signals</p></article>
+            <article class="card"><div class="cover">✧</div><strong>New Light</strong><p>Various artists</p></article>
+          </section>
+        </main>
+      </div>
+      <footer class="player">
+        <div class="track"><span class="mini-art c2"></span><div class="track-copy"><strong>Quiet Motion</strong><span>Aster Vale</span></div><span style="color:#1ed760">♡</span></div>
+        <div class="player-center"><div class="controls"><span>⤨</span><span>◀</span><button class="play-button">▶</button><span>▶</span><span>↻</span></div><div class="progress"><span></span></div></div>
+        <div class="extras">♫ &nbsp; ━━━━━●</div>
+      </footer>
+    </div>
+  </body>
+</html>

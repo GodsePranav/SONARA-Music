@@ -1,0 +1,27 @@
+{
+  "name": "sonara",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": ["apps/*", "packages/*"],
+  "overrides": { "shell-quote": "^1.10.1" },
+  "scripts": {
+    "dev": "npm run build -w @sonara/contracts && concurrently -n api,web -c green,cyan \"npm run dev -w @sonara/api\" \"npm run dev -w @sonara/web\"",
+    "build": "npm run build -w @sonara/contracts && npm run build -w @sonara/api && npm run build -w @sonara/web",
+    "typecheck": "npm run build -w @sonara/contracts && npm run typecheck -w @sonara/api && npm run typecheck -w @sonara/web",
+    "lint": "eslint apps packages --max-warnings=0",
+    "format": "prettier --write \"apps/**/*.{ts,tsx,css}\" \"packages/**/*.{ts,tsx}\"",
+    "test": "npm run test -w @sonara/api && npm run test -w @sonara/web"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.22.0",
+    "concurrently": "^9.1.2",
+    "eslint": "^9.22.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^16.0.0",
+    "prettier": "^3.5.3",
+    "typescript": "~5.8.2",
+    "typescript-eslint": "^8.26.1"
+  }
+}

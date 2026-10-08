@@ -1,0 +1,117 @@
+name: sonara
+services:
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    environment:
+      VITE_API_URL: http://localhost:4000/api/v1
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/workspace
+      - web_node_modules:/workspace/node_modules
+    depends_on:
+      api:
+        condition: service_healthy
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    environment:
+      NODE_ENV: development
+      WEB_ORIGIN: http://localhost:5173
+      API_PORT: 4000
+      MONGODB_URI: mongodb://mongo:27017/sonara
+      REDIS_URL: redis://redis:6379
+      JWT_ACCESS_SECRET: local-only-change-before-deploy-SONARA-2026
+      COOKIE_SECURE: "false"
+      SMTP_HOST: ""
+      SMTP_PORT: 587
+      SMTP_USER: ""
+      SMTP_PASSWORD: ""
+      MAIL_FROM: SONARA <no-reply@sonara.local>
+      MINIO_ENDPOINT: minio
+      MINIO_PORT: 9000
+      MINIO_ACCESS_KEY: sonara
+      MINIO_SECRET_KEY: local-storage-password
+      MINIO_BUCKET: sonara-media
+      MEILI_HOST: http://meilisearch:7700
+      MEILI_MASTER_KEY: local-search-password
+    ports:
+      - "4000:4000"
+    volumes:
+      - .:/workspace
+      - api_node_modules:/workspace/node_modules
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:4000/ready').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 15s
+  mongo:
+    image: mongo:8
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+  minio:
+    image: minio/minio:RELEASE.2025-02-28T09-55-16Z
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: sonara
+      MINIO_ROOT_PASSWORD: local-storage-password
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+  minio-init:
+    image: minio/mc:RELEASE.2025-02-21T16-00-46Z
+    depends_on:
+      minio:
+        condition: service_started
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["until mc alias set local http://minio:9000 sonara local-storage-password >/dev/null 2>&1 && mc ready local >/dev/null 2>&1; do sleep 2; done; mc mb --ignore-existing local/sonara-media"]
+    restart: "no"
+  meilisearch:
+    image: getmeili/meilisearch:v1.13
+    environment:
+      MEILI_ENV: development
+      MEILI_MASTER_KEY: local-search-password
+    ports:
+      - "7700:7700"
+    volumes:
+      - meili_data:/meili_data
+
+volumes:
+  mongo_data:
+  redis_data:
+  minio_data:
+  meili_data:
+  web_node_modules:
+  api_node_modules:

@@ -14,7 +14,6 @@ Requirements: Node.js 22+, npm 10+, and Docker Compose v2.
 docker compose up --build
 ```
 
-Open the web app at http://localhost:5173. The API health endpoint is http://localhost:4000/health. MongoDB, Redis, MinIO, and Meilisearch are available on ports 27017, 6379, 9000/9001, and 7700. Local development uses non-production credentials from `compose.yaml`.
 
 For host-based frontend/API development, copy `.env.example` to `.env`, start MongoDB and Redis (or use Compose services), then run:
 

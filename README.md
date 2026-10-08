@@ -8,7 +8,58 @@ Phase 1 establishes the monorepo, local services, the Figtree design system, acc
 
 ## Static UI design preview
 
-Open the [standalone HTML/CSS screen preview](docs/ui-preview.html) for the responsive SONARA interface. It is a static design file and does not require the app or a server. GitHub displays HTML files as source, so download the file and open it in a browser to view the rendered design.
+<table width="100%" cellpadding="12" cellspacing="0" border="0">
+  <tr>
+    <td colspan="2" align="left"><strong>◉ SONARA</strong> &nbsp;&nbsp;&nbsp; <code>⌕ &nbsp; What do you want to play?</code> <span>&nbsp;&nbsp;&nbsp; ⌂ Home &nbsp; · &nbsp; ⌕ Search &nbsp; · &nbsp; Profile ◉</span></td>
+  </tr>
+  <tr>
+    <td width="220" valign="top">
+      <strong>YOUR LIBRARY</strong><br /><br />
+      <code>Playlists</code> &nbsp; Artists &nbsp; Albums<br /><br />
+      💚 &nbsp; <strong>Liked Songs</strong><br />&nbsp;&nbsp;&nbsp;&nbsp; Playlist · You<br /><br />
+      🟧 &nbsp; <strong>Daily Mix 01</strong><br />&nbsp;&nbsp;&nbsp;&nbsp; Made for you<br /><br />
+      🟩 &nbsp; <strong>Evening Focus</strong><br />&nbsp;&nbsp;&nbsp;&nbsp; Playlist · You<br /><br />
+      🟪 &nbsp; <strong>Fresh Finds</strong>
+    </td>
+    <td valign="top">
+      <small>YOUR PERSONAL LISTENING SPACE</small>
+      <h1>Good evening.</h1>
+      <p>Your next favorite is closer than you think.</p>
+      <p><code>● Find your sound</code></p>
+      <br />
+      <strong>QUICK ACCESS</strong>
+      <table width="100%" cellpadding="8" cellspacing="6" border="0">
+        <tr>
+          <td>💚 &nbsp; Liked Songs &nbsp; <code>▶</code></td>
+          <td>🟧 &nbsp; Daily Mix 01 &nbsp; <code>▶</code></td>
+          <td>🟩 &nbsp; Evening Focus &nbsp; <code>▶</code></td>
+        </tr>
+        <tr>
+          <td>🟪 &nbsp; Fresh Finds &nbsp; <code>▶</code></td>
+          <td>🟦 &nbsp; Soft Focus &nbsp; <code>▶</code></td>
+          <td>🟨 &nbsp; On repeat &nbsp; <code>▶</code></td>
+        </tr>
+      </table>
+      <br />
+      <table width="100%" cellpadding="6" cellspacing="0" border="0">
+        <tr><td><h2>Made for your day</h2></td><td align="right"><small>SHOW ALL</small></td></tr>
+      </table>
+      <table width="100%" cellpadding="8" cellspacing="6" border="0">
+        <tr>
+          <td>🎨<br /><br /><strong>Daily Mix 01</strong><br /><small>A little of everything</small></td>
+          <td>🌊<br /><br /><strong>Soft Focus</strong><br /><small>Calm sounds for today</small></td>
+          <td>✨<br /><br /><strong>Fresh Finds</strong><br /><small>New music picked for you</small></td>
+          <td>🌙<br /><br /><strong>Late Night</strong><br /><small>A playlist for the ride</small></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center">🎵 &nbsp; <strong>Quiet Motion</strong> · Aster Vale &nbsp;&nbsp;&nbsp;&nbsp; ⤨ &nbsp; ◀ &nbsp; <code>▶</code> &nbsp; ▶ &nbsp; ↻ &nbsp;&nbsp;&nbsp;&nbsp; ━━━━━●━━━ &nbsp;&nbsp; 🔊</td>
+  </tr>
+</table>
+
+<div align="center"><sub>Static SONARA interface preview · Audio playback is still in development</sub></div>
 
 ## Run locally
 

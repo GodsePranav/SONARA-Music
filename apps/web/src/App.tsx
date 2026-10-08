@@ -14,6 +14,7 @@ import { useSession } from "./stores/session";
 export function App(): JSX.Element {
   const user = useSession((state) => state.user);
   const location = useLocation();
+  const isPreview = location.pathname.startsWith("/preview");
   const [searchParams] = useSearchParams();
   const [checkingSession, setCheckingSession] = useState(true);
 
@@ -30,6 +31,7 @@ export function App(): JSX.Element {
     );
   if (
     !user &&
+    !isPreview &&
     !location.pathname.startsWith("/login") &&
     !location.pathname.startsWith("/signup") &&
     !location.pathname.startsWith("/reset-password")
@@ -64,6 +66,10 @@ export function App(): JSX.Element {
             />
           )
         }
+      />
+      <Route
+        path="/preview/*"
+        element={<AppShell preview />}
       />
       <Route
         path="/*"

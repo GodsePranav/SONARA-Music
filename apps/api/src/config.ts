@@ -23,6 +23,11 @@ const envSchema = z.object({
   SMTP_USER: z.string().default(""),
   SMTP_PASSWORD: z.string().default(""),
   MAIL_FROM: z.string().min(3).default("SONARA <no-reply@sonara.local>"),
+  JAMENDO_CLIENT_ID: z.string().default(""),
+  STREAM_URL_SECRET: z
+    .string()
+    .min(32)
+    .default("local-stream-secret-change-this-value"),
 });
 
 export const env = envSchema.parse(process.env);
@@ -39,6 +44,14 @@ if (env.NODE_ENV === "production") {
   if (!env.SMTP_HOST) {
     throw new Error(
       "SMTP_HOST must be configured in production for password reset delivery.",
+    );
+  }
+  if (
+    env.STREAM_URL_SECRET === "local-stream-secret-change-this-value" ||
+    env.STREAM_URL_SECRET.startsWith("replace-with-")
+  ) {
+    throw new Error(
+      "STREAM_URL_SECRET must be set to a unique secret in production.",
     );
   }
 }

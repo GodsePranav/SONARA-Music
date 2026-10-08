@@ -60,3 +60,52 @@ export type SignUpInput = z.infer<typeof signUpSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type SessionUser = z.infer<typeof sessionUserSchema>;
 export type UpdateMeInput = z.infer<typeof updateMeSchema>;
+
+export const catalogArtistSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  imageUrl: z.string().url().nullable(),
+  genres: z.array(z.string()),
+});
+export const catalogAlbumSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  artistId: z.string(),
+  artistName: z.string(),
+  imageUrl: z.string().url().nullable(),
+  releaseDate: z.string().nullable(),
+  releaseType: z.enum(["album", "single"]),
+  trackCount: z.number().int().nonnegative().optional(),
+});
+export const catalogTrackSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  artistId: z.string(),
+  artistName: z.string(),
+  albumId: z.string().nullable(),
+  albumName: z.string().nullable(),
+  coverUrl: z.string().url(),
+  durationSeconds: z.number().positive(),
+  licenseUrl: z.string().url(),
+  tags: z.array(z.string()),
+  explicit: z.boolean(),
+});
+export const catalogPlaylistSchema = z.object({
+  id: z.string(),
+  slug: z.string(),
+  name: z.string(),
+  description: z.string(),
+  creatorName: z.string(),
+  coverUrl: z.string().url().nullable(),
+  genres: z.array(z.string()),
+  trackCount: z.number().int().nonnegative(),
+});
+export const catalogPageSchema = <T extends z.ZodTypeAny>(item: T) =>
+  z.object({
+    data: z.array(item),
+    page: z.object({ nextCursor: z.string().nullable(), hasMore: z.boolean() }),
+  });
+export type CatalogArtist = z.infer<typeof catalogArtistSchema>;
+export type CatalogAlbum = z.infer<typeof catalogAlbumSchema>;
+export type CatalogTrack = z.infer<typeof catalogTrackSchema>;
+export type CatalogPlaylist = z.infer<typeof catalogPlaylistSchema>;

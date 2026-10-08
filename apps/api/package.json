@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "dev:preview": "tsx watch src/server.ts --preview-memory",
+    "seed:catalog": "tsx src/scripts/seedCatalog.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/server.js",
     "typecheck": "tsc --noEmit -p tsconfig.json",

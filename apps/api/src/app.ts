@@ -9,6 +9,11 @@ import { authRouter } from "./routes/auth.js";
 import { requireAuth } from "./middleware/auth.js";
 import { User } from "./models/User.js";
 import { updateMeSchema } from "@sonara/contracts";
+import { catalogRouter } from "./routes/catalog.js";
+import { libraryRouter } from "./routes/library.js";
+import { PlayHistory } from "./models/PlayHistory.js";
+import { Track } from "./models/Track.js";
+import { z } from "zod";
 
 export const app = express();
 app.disable("x-powered-by");
@@ -43,6 +48,81 @@ const authLimiter = rateLimit({
   },
 });
 app.use("/api/v1/auth", authLimiter, authRouter);
+app.use("/api/v1", libraryRouter);
+app.use("/api/v1", catalogRouter);
+const playbackProgressSchema = z
+  .object({
+    trackId: z.string().regex(/^[a-f\d]{24}$/i),
+    positionSeconds: z.number().finite().min(0).max(3600),
+  })
+  .strict();
+app.get("/api/v1/me/playback", requireAuth, async (request, response) => {
+  const latest = await PlayHistory.findOne({ userId: request.userId })
+    .sort({ updatedAt: -1 })
+    .lean();
+  if (!latest) {
+    response.json({ data: null });
+    return;
+  }
+  const track = await Track.findById(latest.trackId)
+    .select(
+      "title artistId artistName albumId albumName coverUrl durationSeconds licenseUrl tags explicit",
+    )
+    .lean();
+  if (!track) {
+    response.json({ data: null });
+    return;
+  }
+  response.json({
+    data: {
+      track: {
+        id: track._id.toString(),
+        title: track.title,
+        artistId: track.artistId.toString(),
+        artistName: track.artistName,
+        albumId: track.albumId?.toString() ?? null,
+        albumName: track.albumName ?? null,
+        coverUrl: track.coverUrl,
+        durationSeconds: track.durationSeconds,
+        licenseUrl: track.licenseUrl,
+        tags: track.tags,
+        explicit: track.explicit,
+      },
+      positionSeconds: latest.positionSeconds,
+    },
+  });
+});
+app.put("/api/v1/me/playback", requireAuth, async (request, response) => {
+  const parsed = playbackProgressSchema.safeParse(request.body);
+  if (!parsed.success) {
+    response.status(400).json({
+      error: {
+        code: "VALIDATION_ERROR",
+        message: "Invalid playback progress.",
+      },
+    });
+    return;
+  }
+  const track = await Track.findById(parsed.data.trackId).select(
+    "durationSeconds",
+  );
+  if (!track) {
+    response
+      .status(404)
+      .json({ error: { code: "NOT_FOUND", message: "Track not found." } });
+    return;
+  }
+  const positionSeconds = Math.min(
+    parsed.data.positionSeconds,
+    track.durationSeconds,
+  );
+  await PlayHistory.findOneAndUpdate(
+    { userId: request.userId, trackId: track._id },
+    { $set: { positionSeconds, playedAt: new Date() } },
+    { upsert: true, setDefaultsOnInsert: true, runValidators: true },
+  );
+  response.status(204).end();
+});
 app.get("/api/v1/me", requireAuth, async (request, response) => {
   const user = await User.findById(request.userId).select(
     "email displayName avatarKey locale settings",

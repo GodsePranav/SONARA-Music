@@ -3,11 +3,28 @@ import type { SessionUser } from "@sonara/contracts";
 
 const apiBase = import.meta.env.VITE_API_URL ?? "http://localhost:4000/api/v1";
 
+export function apiUrl(path: string): string {
+  return new URL(
+    path.replace(/^\//, ""),
+    `${apiBase.replace(/\/$/, "")}/`,
+  ).toString();
+}
+
 interface ApiErrorBody {
   error?: { message?: string; code?: string };
 }
 interface SessionResponse {
   data: { accessToken: string; user: unknown };
+}
+
+export class ApiRequestError extends Error {
+  constructor(
+    message: string,
+    readonly code: string | undefined,
+  ) {
+    super(message);
+    this.name = "ApiRequestError";
+  }
 }
 
 export async function request<T>(
@@ -40,8 +57,9 @@ export async function request<T>(
   }
   if (!response.ok) {
     const body = (await response.json()) as ApiErrorBody;
-    throw new Error(
+    throw new ApiRequestError(
       body.error?.message ?? `Request failed (${response.status})`,
+      body.error?.code,
     );
   }
   if (response.status === 204) return undefined as T;

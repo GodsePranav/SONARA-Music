@@ -31,6 +31,8 @@ services:
       SMTP_USER: ""
       SMTP_PASSWORD: ""
       MAIL_FROM: SONARA <no-reply@sonara.local>
+      JAMENDO_CLIENT_ID: ${JAMENDO_CLIENT_ID:-}
+      STREAM_URL_SECRET: local-compose-stream-secret-change-this-value
       MINIO_ENDPOINT: minio
       MINIO_PORT: 9000
       MINIO_ACCESS_KEY: sonara

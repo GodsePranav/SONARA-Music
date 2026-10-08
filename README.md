@@ -6,6 +6,29 @@ SONARA is an original music streaming app foundation. It uses licensed catalog s
 
 Phase 1 establishes the monorepo, local services, the Figtree design system, account flows, and responsive app shell. The player controls are present as shell UI; the audio engine arrives in Phase 2.
 
+## Static UI design preview
+
+<table>
+  <tr>
+    <td colspan="2" align="center"><strong>◉ SONARA</strong> &nbsp; <code>⌕ What do you want to play?</code> <br /><br />⌂ Home &nbsp; · &nbsp; ⌕ Search &nbsp; · &nbsp; Profile</td>
+  </tr>
+  <tr>
+    <td width="210" valign="top" rowspan="3"><strong>YOUR LIBRARY</strong><br /><br /><code>Playlists</code> &nbsp; Artists &nbsp; Albums<br /><br />💚 &nbsp; <strong>Liked Songs</strong><br />&nbsp;&nbsp;&nbsp;&nbsp; Playlist · You<br /><br />♫ &nbsp; Daily Mix 01<br /><br />♫ &nbsp; Evening Focus<br /><br />♫ &nbsp; Fresh Finds</td>
+    <td valign="top"><small>YOUR PERSONAL LISTENING SPACE</small><h2>Good evening.</h2><p>Your next favorite is closer than you think.</p><code>● Find your sound</code></td>
+  </tr>
+  <tr>
+    <td valign="top"><strong>Quick access</strong><br /><br />💚 &nbsp; Liked Songs &nbsp;&nbsp; · &nbsp;&nbsp; 🌅 Daily Mix &nbsp;&nbsp; · &nbsp;&nbsp; ✨ Fresh Finds &nbsp;&nbsp; · &nbsp;&nbsp; ☁️ Easy Listening</td>
+  </tr>
+  <tr>
+    <td valign="top"><h3>Made for your day</h3>🎨 <strong>Daily Mix 01</strong> &nbsp; · &nbsp; 🌊 <strong>Soft Focus</strong> &nbsp; · &nbsp; ✨ <strong>Fresh Finds</strong> &nbsp; · &nbsp; 🌙 <strong>Late Night</strong></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center">🎵 &nbsp; <strong>Quiet Motion</strong> · Aster Vale &nbsp;&nbsp;&nbsp;&nbsp; ⤨ &nbsp; ◀ &nbsp; <code>▶</code> &nbsp; ▶ &nbsp; ↻ &nbsp;&nbsp;&nbsp;&nbsp; ━━━━━●━━━ &nbsp;&nbsp; 🔊</td>
+  </tr>
+</table>
+
+<div align="center"><sub>Static interface concept · Audio playback is still in development</sub></div>
+
 ## Run locally
 
 Requirements: Node.js 22+, npm 10+, and Docker Compose v2.
